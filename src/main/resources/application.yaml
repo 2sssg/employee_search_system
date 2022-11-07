@@ -1,0 +1,26 @@
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties : true
+
+  sql:
+    init:
+      schema-locations: classpath*:db/schema.sql
+      data-locations: classpath*:db/data.sql, classpath*:db/constraint.sql
+      mode: always
+  thymeleaf:
+    cache: false
+    check-template: true
+    suffix: .html
+
+  datasource:
+    username: root
+    password: dmswl0818
+    url: jdbc:mysql://localhost:3306/employee_search_system?serverTimezone=Asia/Seo?ul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+my-db:
+  url: jdbc:mysql://localhost:3306/employee_search_system?serverTimezone=Asia/Seo?ul
+  username: root
+  password: dmswl0818

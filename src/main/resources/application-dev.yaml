@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:company;NON_KEYWORDS=USER;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+
+
+my-db:
+  url: jdbc:h2:mem:company;NON_KEYWORDS=USER;MODE=MYSQL
+  username: sa
+  password:
