@@ -5,23 +5,58 @@
   <title>Index</title>
 </head>
 <body>
-<div>
-  <span> 검색 범위 </span>
-  <select>
-    <option value="all">전체</option>
-    <option value="name">이름</option>
-    <option value="ssn">사번</option>
-    <option value="bdate">생일</option>
-    <option value="address">주소</option>
-    <option value="sex">성별</option>
-    <option value="salary">급여</option>
-    <option value="supervisor">상급자</option>
-    <option value="department">부서</option>
-  </select>
-</div>
+<form action="index.html" th:action="@{/employee}" th:object="${searchReqDto}" method="post">
 
-<div>
+  <div>
+    <span> 검색 범위 </span>
+    <select th:field="*{searchCondition}">
+      <option value="all">전체</option>
+      <option value="department">부서</option>
+      <option value="sex">성별</option>
+      <option value="salary">연봉</option>
+      <option value="bdate">생일</option>
+      <option value="supervisor">상급자</option>
+    </select>
+  </div>
 
+  <div>
+    <div class="form-check">
+      검색항목
+      <input type="checkbox" th:field="*{name}" id="name" th:value="true" checked="checked">
+      <label for="name" class="form-check-label">Name</label>
+      <input type="checkbox" th:field="*{ssn}" id="ssn" class="form-check-input" >
+      <label for="ssn" class="form-check-label">Ssn</label>
+      <input type="checkbox" th:field="*{bdate}" id="bdate" class="form-check-input" th:checked>
+      <label for="bdate" class="form-check-label">Bdate</label>
+      <input type="checkbox" th:field="*{address}" id="address" class="form-check-input" th:checked>
+      <label for="address" class="form-check-label">Address</label>
+      <input type="checkbox" th:field="*{sex}" id="sex" class="form-check-input" th:checked>
+      <label for="sex" class="form-check-label">Sex</label>
+      <input type="checkbox" th:field="*{salary}" id="salary" class="form-check-input" th:checked>
+      <label for="salary" class="form-check-label">Salary</label>
+      <input type="checkbox" th:field="*{supervisor}" id="supervisor" class="form-check-input" th:checked>
+      <label for="supervisor" class="form-check-label">Supervisor</label>
+      <input type="checkbox" th:field="*{department}" id="department" class="form-check-input" th:checked>
+      <label for="department" class="form-check-label">Department</label>
+    </div>
+
+    <button type="submit"> 검색 </button>
+</form>
+
+<table >
+  <tr>
+    <th>seq</th>
+    <th>name</th>
+    <th>price</th>
+    <th>quantity</th>
+  </tr>
+  <tr th:each="product : ${productList}">
+    <td th:text="${product.seq}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.quantity}"></td>
+  </tr>
+</table>
 
 </div>
 </body>

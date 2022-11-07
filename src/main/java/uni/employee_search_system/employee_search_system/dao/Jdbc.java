@@ -3,52 +3,99 @@ package uni.employee_search_system.employee_search_system.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import uni.employee_search_system.employee_search_system.commons.application.DBProperty;
 
 @Slf4j
+@Component
+@ConfigurationProperties(prefix = "my-db")
+@Getter @Setter
 public class Jdbc {
-	@Autowired DBProperty dbProperty;
-	private Statement stmt;
-	private Jdbc() {
-		log.info(dbProperty.toString());
-		String url = dbProperty.getUrl();
+
+	private Connection conn;
+	private String url;
+	private String username;
+	private String password;
+
+	// 빈이 생성될 때 connection을 미리 설정해놓음
+	@PostConstruct
+	private void init() {
 		try {
-			Connection con = DriverManager.getConnection(url,dbProperty.getUsername(),dbProperty.getPassword());
-			stmt = con.createStatement();
-		} catch(Exception e) {
-			log.error("     Connection Error");
-			e.printStackTrace();
+			conn = DriverManager.getConnection(this.url, this.username, this.password);
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
 		}
 	}
-	private static class InnerClass {
-		private static final Jdbc jdbc = new Jdbc();
-	}
 
-	public static Jdbc getInstance(){
-		return InnerClass.jdbc;
-	}
-
-	public ResultSet exeSQuery(String query){
-		ResultSet resultSet=null;
-		try{
-			resultSet = stmt.executeQuery(query);
-		}catch (Exception e){
-			log.error("        query Error");
-			e.printStackTrace();
-		}
-		return resultSet;
-	}
-
-	public void exeUQuery(String query){
-		try{
-			stmt.executeUpdate(query);
-		}catch (Exception e){
-			log.error("        query Error");
-			e.printStackTrace();
+	// Bean Cycle이 다 됐을 때 connection을 끊는다.
+	@PreDestroy
+	private void destroy() {
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
+
+	public ResultSet executeQuery(String query){
+		if (this.conn == null) {
+			try {
+				this.conn = DriverManager.getConnection(this.url, this.username, this.password);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		try {
+			return stmt.executeQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public int executeUpdate(String query) {
+		if (this.conn == null) {
+			try {
+				this.conn = DriverManager.getConnection(this.url, this.username, this.password);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+
+		Statement stmt;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+
+		try {
+			return stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 }
