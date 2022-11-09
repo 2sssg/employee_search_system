@@ -65,7 +65,9 @@ public class Jdbc {
 		}
 
 		try {
-			return stmt.executeQuery(query);
+			System.out.println(query);
+			ResultSet resultSet = stmt.executeQuery(query);
+			return resultSet;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -91,7 +93,9 @@ public class Jdbc {
 		}
 
 		try {
-			return stmt.executeUpdate(query);
+			int updateCount = stmt.executeUpdate(query);
+			System.out.println(query);
+			return updateCount;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;

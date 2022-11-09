@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import uni.employee_search_system.employee_search_system.dao.Jdbc;
-import uni.employee_search_system.employee_search_system.models.dtos.SearchReqDto;
-import uni.employee_search_system.employee_search_system.models.dtos.SearchResDto;
+import uni.employee_search_system.employee_search_system.models.dtos.delete.DeleteReqDto;
+import uni.employee_search_system.employee_search_system.models.dtos.search.SearchReqDto;
+import uni.employee_search_system.employee_search_system.models.dtos.search.SearchResDto;
 import uni.employee_search_system.employee_search_system.services.IndexService;
 
 @Controller
@@ -19,11 +19,15 @@ public class IndexController {
 	@GetMapping("/")
 	public String index(Model model) {
 		SearchResDto searchResDto = new SearchResDto();
+		System.out.println("model : " + model);
 		searchResDto.setSexList(List.of("M", "F"));
 		searchResDto.setDepartmentList(indexService.getDepartmentList());
 		searchResDto.setSupervisorList(indexService.getSupervisorList());
+		model.addAttribute("deleteReqDto", new DeleteReqDto());
 		model.addAttribute("searchResDto", searchResDto);
-		model.addAttribute("searchReqDto",new SearchReqDto());
+		if (!model.containsAttribute("searchReqDto"))
+			model.addAttribute("searchReqDto",new SearchReqDto());
+		System.out.println("model : " + model);
 		return "index";
 	}
 }

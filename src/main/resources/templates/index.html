@@ -26,7 +26,8 @@
       <option th:each="sex, stat : ${searchResDto.sexList}" th:text="${sex}" th:value="${sex}"></option>
     </select>
 
-    <input type="text" th:value="*{salaryCondition}"/>
+    <input type="text" th:field="*{salaryCondition}" th:value="salaryCondition"/>
+    <label th:for="salaryCondition" th:text="salary"> SALARY </label>
 
     <select th:field="*{bdateCondition}">
       <option value="1">1월</option>
@@ -74,21 +75,22 @@
 </form>
 
 
-<table>
-  <thead>
+<form method="post">
+  <table>
+    <thead>
     <tr th:each="emp, stat: ${employeeResDtoList}">
-      <th th:if="${stat.index == 1 && (emp.useName || emp.useSsn)}"><span> 선택 </span></th>
-      <th th:if="${stat.index == 1 && emp.useName}"><span> NAME </span></th>
-      <th th:if="${stat.index == 1 && emp.useSsn}"> <span> SSN </span></th>
-      <th th:if="${stat.index == 1 && emp.useBdate}"><span> BDATE </span></th>
-      <th th:if="${stat.index == 1 && emp.useAddress}"><span> ADDRESS </span></th>
-      <th th:if="${stat.index == 1 && emp.useSex}"><span> SEX </span></th>
-      <th th:if="${stat.index == 1 && emp.useSalary}"><span> SALARY </span></th>
-      <th th:if="${stat.index == 1 && emp.useSupervisor}"><span> SUPERVISOR </span></th>
-      <th th:if="${stat.index == 1 && emp.useDepartment}"><span> DEPARTMENT </span></th>
+      <th th:if="${stat.index == 0 && (emp.useName || emp.useSsn)}"><span> 선택 </span></th>
+      <th th:if="${stat.index == 0 && emp.useName}"><span> NAME </span></th>
+      <th th:if="${stat.index == 0 && emp.useSsn}"> <span> SSN </span></th>
+      <th th:if="${stat.index == 0 && emp.useBdate}"><span> BDATE </span></th>
+      <th th:if="${stat.index == 0 && emp.useAddress}"><span> ADDRESS </span></th>
+      <th th:if="${stat.index == 0 && emp.useSex}"><span> SEX </span></th>
+      <th th:if="${stat.index == 0 && emp.useSalary}"><span> SALARY </span></th>
+      <th th:if="${stat.index == 0 && emp.useSupervisor}"><span> SUPERVISOR </span></th>
+      <th th:if="${stat.index == 0 && emp.useDepartment}"><span> DEPARTMENT </span></th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <tr th:each="emp, stat: ${employeeResDtoList}">
       <td th:if="${emp.useName || emp.useSsn}">
         <span>
@@ -105,8 +107,14 @@
       <td th:if="${emp.useSupervisor}"><span th:text="${emp.supervisor}"></span></td>
       <td th:if="${emp.useDepartment}"><span th:text="${emp.department}"></span></td>
     </tr>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+
+  <button type="submit" value="수정" th:formaction="@{/employee/update}"> 수정 </button>
+  <button type="submit" value="삭제" th:formaction="@{/employee/delete}"> 삭제 </button>
+
+</form>
+
 
 </body>
 </html>

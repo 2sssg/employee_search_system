@@ -37,8 +37,7 @@ public class IndexService {
 		ResultSet resultSet = jdbc.executeQuery("SELECT e2.Fname, e2.Minit, e2.Lname "
 				+ "FROM EMPLOYEE as e1 "
 				+ "JOIN EMPLOYEE as e2 "
-				+ "ON e1.Ssn = e2.Super_ssn "
-				+ "WHERE e1.Super_ssn IS NOT NULL");
+				+ "ON e1.Super_ssn = e2.Ssn ");
 		try {
 			while (resultSet.next()) {
 				supervisorSet.add(resultSet.getString("Fname") + " " +

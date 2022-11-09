@@ -61,63 +61,78 @@ public class Employee {
 		if (fname != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND fname LIKE " : "WHERE fname LIKE ")
+					.append("'")
 					.append(fname)
-					.append(" ");
+					.append("' ");
 		}
 
 		if (minit != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND minit LIKE " : "WHERE minit LIKE ")
+					.append("'")
 					.append(minit)
+					.append("'")
 					.append(" ");
 		}
 
 		if (lname != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND lname LIKE " : "WHERE lname LIKE ")
+					.append("'")
 					.append(lname)
+					.append("'")
 					.append(" ");
 		}
 
 		if (ssn != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND ssn LIKE " : "WHERE ssn LIKE ")
+					.append("'")
 					.append(ssn)
+					.append("'")
 					.append(" ");
 		}
 
 		if (bdate != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND bdate LIKE " : "WHERE bdate LIKE ")
+					.append("'____-")
 					.append(bdate)
+					.append("-__'")
 					.append(" ");
 		}
 
 		if (address != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND address LIKE " : "WHERE address LIKE ")
+					.append("'")
 					.append(address)
+					.append("'")
 					.append(" ");
 		}
 
 		if (sex != null) {
 			whereQuery
 					.append(whereQuery.toString().contains("WHERE") ? "AND sex LIKE " : "WHERE sex LIKE ")
+					.append("'")
 					.append(sex)
+					.append("'")
 					.append(" ");
 		}
 
 		if (salary != 0) {
 			whereQuery
-					.append(whereQuery.toString().contains("WHERE") ? "AND salary = " : "WHERE salary = ")
+					.append(whereQuery.toString().contains("WHERE") ? "AND salary = " : "WHERE salary >= ")
 					.append(salary)
 					.append(" ");
 		}
 
 		if (superSsn != null) {
 			whereQuery
-					.append(whereQuery.toString().contains("WHERE") ? "AND superSsn LIKE " : "WHERE superSsn LIKE ")
+					.append(whereQuery.toString().contains("WHERE") ? "AND super_Ssn LIKE " : "WHERE super_Ssn LIKE ")
+					.append("'")
 					.append(superSsn)
+					.append("'")
 					.append(" ");
 
 		}

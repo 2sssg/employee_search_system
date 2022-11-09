@@ -1,4 +1,4 @@
-package uni.employee_search_system.employee_search_system.models.dtos;
+package uni.employee_search_system.employee_search_system.models.dtos.search;
 
 import java.util.ArrayList;
 import java.util.List;
