@@ -10,13 +10,6 @@ import lombok.ToString;
 @ToString
 public class SearchReqDto {
 
-
-	//<option value="department">부서</option>
-	//      <option value="sex">성별</option>
-	//      <option value="salary">연봉</option>
-	//      <option value="bdate">생일</option>
-	//      <option value="supervisor">상급자</option>
-
 	private String searchCondition;
 	private String departmentCondition;
 	private String sexCondition;

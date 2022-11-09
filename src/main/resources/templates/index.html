@@ -17,21 +17,34 @@
       <option value="bdate">생일</option>
       <option value="supervisor">상급자</option>
     </select>
-    <select hidden>
-      <option value="temp">temp</option>
+
+    <select th:field="*{departmentCondition}">
+      <option th:each="department, stat : ${searchResDto.departmentList}" th:text="${department}" th:value="${department}"></option>
     </select>
-    <select th:field="*{searchConditionAdditionalInfo}">
-      <option value="M">Male</option>
-      <option value="F">Female</option>
+
+    <select th:field="*{sexCondition}">
+      <option th:each="sex, stat : ${searchResDto.sexList}" th:text="${sex}" th:value="${sex}"></option>
     </select>
-    <select th:field="*{searchConditionAdditionalInfo}" hidden>
-      <option value="0">연봉</option>
+
+    <input type="text" th:value="*{salaryCondition}"/>
+
+    <select th:field="*{bdateCondition}">
+      <option value="1">1월</option>
+      <option value="2">2월</option>
+      <option value="3">3월</option>
+      <option value="4">4월</option>
+      <option value="5">5월</option>
+      <option value="6">6월</option>
+      <option value="7">7월</option>
+      <option value="8">8월</option>
+      <option value="9">9월</option>
+      <option value="10">10월</option>
+      <option value="11">11월</option>
+      <option value="12">12월</option>
     </select>
-    <select>
-      <option value="temp">temp</option>
-    </select>
-    <select>
-      <option value="temp">temp</option>
+
+    <select th:field="*{supervisorCondition}">
+      <option th:each="supervisor, stat: ${searchResDto.supervisorList}" th:text="${supervisor}" th:value="${supervisor}"></option>
     </select>
   </div>
 
