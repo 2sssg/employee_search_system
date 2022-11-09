@@ -17,6 +17,22 @@
       <option value="bdate">생일</option>
       <option value="supervisor">상급자</option>
     </select>
+    <select hidden>
+      <option value="temp">temp</option>
+    </select>
+    <select th:field="*{searchConditionAdditionalInfo}">
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+    </select>
+    <select th:field="*{searchConditionAdditionalInfo}" hidden>
+      <option value="0">연봉</option>
+    </select>
+    <select>
+      <option value="temp">temp</option>
+    </select>
+    <select>
+      <option value="temp">temp</option>
+    </select>
   </div>
 
   <div>
@@ -41,23 +57,43 @@
     </div>
 
     <button type="submit"> 검색 </button>
+  </div>
 </form>
 
-<table >
-  <tr>
-    <th>seq</th>
-    <th>name</th>
-    <th>price</th>
-    <th>quantity</th>
-  </tr>
-  <tr th:each="product : ${productList}">
-    <td th:text="${product.seq}"></td>
-    <td th:text="${product.name}"></td>
-    <td th:text="${product.price}"></td>
-    <td th:text="${product.quantity}"></td>
-  </tr>
+
+<table>
+  <thead>
+    <tr th:each="emp, stat: ${employeeResDtoList}">
+      <th th:if="${stat.index == 1 && (emp.useName || emp.useSsn)}"><span> 선택 </span></th>
+      <th th:if="${stat.index == 1 && emp.useName}"><span> NAME </span></th>
+      <th th:if="${stat.index == 1 && emp.useSsn}"> <span> SSN </span></th>
+      <th th:if="${stat.index == 1 && emp.useBdate}"><span> BDATE </span></th>
+      <th th:if="${stat.index == 1 && emp.useAddress}"><span> ADDRESS </span></th>
+      <th th:if="${stat.index == 1 && emp.useSex}"><span> SEX </span></th>
+      <th th:if="${stat.index == 1 && emp.useSalary}"><span> SALARY </span></th>
+      <th th:if="${stat.index == 1 && emp.useSupervisor}"><span> SUPERVISOR </span></th>
+      <th th:if="${stat.index == 1 && emp.useDepartment}"><span> DEPARTMENT </span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="emp, stat: ${employeeResDtoList}">
+      <td th:if="${emp.useName || emp.useSsn}">
+        <span>
+          <input type="checkbox" id="check" >
+          <label for="check"></label>
+        </span>
+      </td>
+      <td th:if="${emp.useName}"><span th:text="${emp.name}"></span></td>
+      <td th:if="${emp.useSsn}" ><span th:text="${emp.ssn}"></span></td>
+      <td th:if="${emp.useBdate}"><span th:text="${emp.bdate}"></span></td>
+      <td th:if="${emp.useAddress}"><span th:text="${emp.address}"></span></td>
+      <td th:if="${emp.useSex}"><span th:text="${emp.sex}"></td>
+      <td th:if="${emp.useSalary}"><span th:text="${emp.salary}"></span></td>
+      <td th:if="${emp.useSupervisor}"><span th:text="${emp.supervisor}"></span></td>
+      <td th:if="${emp.useDepartment}"><span th:text="${emp.department}"></span></td>
+    </tr>
+  </tbody>
 </table>
 
-</div>
 </body>
 </html>
