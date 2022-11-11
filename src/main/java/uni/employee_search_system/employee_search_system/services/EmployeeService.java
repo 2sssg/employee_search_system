@@ -512,7 +512,6 @@ public class EmployeeService {
 		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM DEPARTMENT WHERE Dnumber = " + dno);
 		try {
 			rs.next();
-			System.out.println("dept : " + rs.getInt(1));
 			return rs.getInt(1) == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -527,7 +526,6 @@ public class EmployeeService {
 		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM EMPLOYEE WHERE Ssn LIKE '" + superSsn + "'");
 		try {
 			rs.next();
-			System.out.println("super ssn : " + rs.getInt(1));
 			return rs.getInt(1) == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -542,7 +540,6 @@ public class EmployeeService {
 		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM EMPLOYEE WHERE Ssn LIKE '" + ssn + "'");
 		try {
 			rs.next();
-			System.out.println(rs.getInt(1) == 0);
 			return rs.getInt(1) == 0;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -2,9 +2,7 @@ package uni.employee_search_system.employee_search_system.controllers;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +33,7 @@ public class EmployeeController {
 
 	@PostMapping("/find")
 	public String findEmployee(Model model, SearchReqDto searchReqDto, RedirectAttributes redirectAttributes) {
-		System.out.println("model : " + model);
+
 		SearchResDto searchResDto = new SearchResDto();
 		searchResDto.setSexList(List.of("M", "F"));
 		searchResDto.setDepartmentList(indexService.getDepartmentList());
@@ -78,8 +76,6 @@ public class EmployeeController {
 	@PostMapping("/update")
 	public String updateEmployee(Model model,
 			@ModelAttribute("ModifyEmployeeReqDto") ModifyEmployeeReqDto modifyEmployeeReqDto) {
-
-		System.out.println("=========" + modifyEmployeeReqDto);
 
 		List<String> modifyingSsn = employeeService.getModifyingSsn(modifyEmployeeReqDto.getEmployeeReqDtoList());
 		if (modifyingSsn.isEmpty())

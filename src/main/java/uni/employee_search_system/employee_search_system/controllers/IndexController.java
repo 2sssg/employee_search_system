@@ -19,7 +19,6 @@ public class IndexController {
 	@GetMapping("/")
 	public String index(Model model) {
 		SearchResDto searchResDto = new SearchResDto();
-		System.out.println("model : " + model);
 		searchResDto.setSexList(List.of("M", "F"));
 		searchResDto.setDepartmentList(indexService.getDepartmentList());
 		searchResDto.setSupervisorList(indexService.getSupervisorList());
@@ -33,7 +32,6 @@ public class IndexController {
 		if (!model.containsAttribute("searchReqDto"))
 			model.addAttribute("searchReqDto",new SearchReqDto());
 
-		System.out.println("model : " + model);
 		return "index";
 	}
 }

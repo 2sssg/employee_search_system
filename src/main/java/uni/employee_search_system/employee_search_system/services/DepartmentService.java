@@ -63,7 +63,6 @@ public class DepartmentService {
 
 	public void updateDepartmentSalary(String salary, String department) {
 
-		System.out.println("masdkasdmklasdmklasdmklsda");
 		String modifyTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 				.format(new Timestamp(System.currentTimeMillis()));
 		jdbc.executeUpdate("UPDATE EMPLOYEE "
