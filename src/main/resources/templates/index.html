@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <meta charset="UTF-8">
   <title>Index</title>
 </head>
 <body>
-<form action="index.html" th:action="@{/employee}" th:object="${searchReqDto}" method="post">
+<form action="index.html" th:action="@{/employee/find}" th:object="${searchReqDto}" method="post">
 
   <div>
     <span> 검색 범위 </span>
-    <select th:field="*{searchCondition}">
-      <option value="all">전체</option>
-      <option value="department">부서</option>
-      <option value="sex">성별</option>
-      <option value="salary">연봉</option>
-      <option value="bdate">생일</option>
-      <option value="supervisor">상급자</option>
+    <select th:field="*{searchCondition}" id="searchCondition">
+      <option value="all" id="allOption">전체</option>
+      <option value="department" id="departmentOption">부서</option>
+      <option value="sex" id="sexOption">성별</option>
+      <option value="salary" id="salaryOption">연봉</option>
+      <option value="bdate" id="bdateOption">생일</option>
+      <option value="supervisor" id="supervisorOption">상급자</option>
     </select>
 
-    <select th:field="*{departmentCondition}">
+    <select th:field="*{departmentCondition}" id="departmentFiled">
       <option th:each="department, stat : ${searchResDto.departmentList}" th:text="${department}" th:value="${department}"></option>
     </select>
 
-    <select th:field="*{sexCondition}">
+    <select th:field="*{sexCondition}" id="sexField">
       <option th:each="sex, stat : ${searchResDto.sexList}" th:text="${sex}" th:value="${sex}"></option>
     </select>
 
-    <input type="text" th:field="*{salaryCondition}" th:value="salaryCondition"/>
-    <label th:for="salaryCondition" th:text="salary"> SALARY </label>
+    <input type="text" th:field="*{salaryCondition}" th:value="salaryCondition" id="salaryField"/>
 
-    <select th:field="*{bdateCondition}">
+    <select th:field="*{bdateCondition}" id="bdateField">
       <option value="1">1월</option>
       <option value="2">2월</option>
       <option value="3">3월</option>
@@ -44,7 +44,7 @@
       <option value="12">12월</option>
     </select>
 
-    <select th:field="*{supervisorCondition}">
+    <select th:field="*{supervisorCondition}" id="supervisorField">
       <option th:each="supervisor, stat: ${searchResDto.supervisorList}" th:text="${supervisor}" th:value="${supervisor}"></option>
     </select>
   </div>
@@ -75,10 +75,10 @@
 </form>
 
 
-<form method="post">
+<form method="post" th:object="${ModifyEmployeeReqDto}">
   <table>
     <thead>
-    <tr th:each="emp, stat: ${employeeResDtoList}">
+    <tr th:each="emp, stat: ${EmployeeResDtoList}">
       <th th:if="${stat.index == 0 && (emp.useName || emp.useSsn)}"><span> 선택 </span></th>
       <th th:if="${stat.index == 0 && emp.useName}"><span> NAME </span></th>
       <th th:if="${stat.index == 0 && emp.useSsn}"> <span> SSN </span></th>
@@ -91,30 +91,109 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="emp, stat: ${employeeResDtoList}">
+    <tr th:each="emp, stat: ${EmployeeResDtoList}">
       <td th:if="${emp.useName || emp.useSsn}">
         <span>
-          <input type="checkbox" id="check" >
+          <input type="checkbox" id="check" th:field="*{employeeReqDtoList[__${stat.index}__].check}">
           <label for="check"></label>
         </span>
       </td>
+
       <td th:if="${emp.useName}"><span th:text="${emp.name}"></span></td>
-      <td th:if="${emp.useSsn}" ><span th:text="${emp.ssn}"></span></td>
+
+      <td th:if="${emp.useSsn}" >
+        <span th:text="${emp.ssn}"></span>
+        <input type="hidden" th:field="*{employeeReqDtoList[__${stat.index}__].ssn}"/>
+      </td>
+
       <td th:if="${emp.useBdate}"><span th:text="${emp.bdate}"></span></td>
-      <td th:if="${emp.useAddress}"><span th:text="${emp.address}"></span></td>
-      <td th:if="${emp.useSex}"><span th:text="${emp.sex}"></td>
-      <td th:if="${emp.useSalary}"><span th:text="${emp.salary}"></span></td>
+
+      <td th:if="${emp.useAddress}">
+        <span th:text="${emp.address}"></span>
+      </td>
+
+      <td th:if="${emp.useSex}">
+        <span th:text="${emp.sex}" ></span>
+      </td>
+
+      <td th:if="${emp.useSalary}">
+        <span th:text="${emp.salary}" ></span>
+      </td>
+
       <td th:if="${emp.useSupervisor}"><span th:text="${emp.supervisor}"></span></td>
+
       <td th:if="${emp.useDepartment}"><span th:text="${emp.department}"></span></td>
+
     </tr>
     </tbody>
   </table>
 
-  <button type="submit" value="수정" th:formaction="@{/employee/update}"> 수정 </button>
-  <button type="submit" value="삭제" th:formaction="@{/employee/delete}"> 삭제 </button>
+<!--  <input type="text" th:field="*{salaryCondition}" th:value="salaryCondition"/>-->
+<!--  <label th:for="salaryCondition" th:text="salary"> SALARY </label>-->
+<!--  <input type="submit" value="수정" th:field="*{salary}" th:formaction="@{/employee/update}"> 수정 </input>-->
+  <div>
+    <select th:field="*{updateCondition}">
+      <option value="sex">성별</option>
+      <option value="salary">연봉</option>
+      <option value="address">주소</option>
+    </select>
+
+    <select th:field="*{sex}">
+      <option th:each="sex, stat : ${searchResDto.sexList}" th:text="${sex}" th:value="${sex}"></option>
+    </select>
+
+    <input type="text" th:field="*{salary}" th:value="salary"/>
+
+    <input type="text" th:field="*{address}" th:value="address"/>
+
+    <input type="submit" th:value="수정" th:formaction="@{/employee/update}"/>
+
+    <input type="submit" th:value="삭제" th:formaction="@{/employee/delete}"/>
+
+  </div>
 
 </form>
 
 
+<script>
+
+  $(document).ready(function() {
+    hideAll();
+    $('#searchCondition').change(function() {
+      hideAll();
+      switch($(this).children('option:selected').text()) {
+        case '전체':
+          break;
+        case '부서':
+          $("#departmentFiled").show();
+          break;
+        case '성별':
+          $("#sexField").show();
+          break;
+        case '연봉':
+          $("#salaryField").show();
+          break;
+        case '생일':
+          $("#bdateField").show();
+          break;
+        case '상급자':
+          $("#supervisorField").show();
+          break;
+      }
+    });
+    function hideAll() {
+      $("#departmentFiled").hide();
+      $("#sexField").hide();
+      $("#salaryField").hide();
+      $("#bdateField").hide();
+      $("#supervisorField").hide();
+    }
+
+
+  });
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </body>
 </html>

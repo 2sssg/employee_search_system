@@ -1,22 +1,27 @@
 package uni.employee_search_system.employee_search_system.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uni.employee_search_system.employee_search_system.models.dtos.EmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.EmployeeResDto;
+import uni.employee_search_system.employee_search_system.models.dtos.ModifyEmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.search.SearchReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.search.SearchResDto;
 import uni.employee_search_system.employee_search_system.models.vo.Employee;
+import uni.employee_search_system.employee_search_system.services.CommonService;
 import uni.employee_search_system.employee_search_system.services.EmployeeService;
 import uni.employee_search_system.employee_search_system.services.IndexService;
 
 @Controller
-@RequestMapping("/employee")
+@RequestMapping("/employee/*")
 @RequiredArgsConstructor
 public class EmployeeController {
 
@@ -24,7 +29,9 @@ public class EmployeeController {
 
 	private final IndexService indexService;
 
-	@PostMapping
+	private final CommonService commonService;
+
+	@PostMapping("/find")
 	public String findEmployee(Model model, SearchReqDto searchReqDto, RedirectAttributes redirectAttributes) {
 		System.out.println("model : " + model);
 		SearchResDto searchResDto = new SearchResDto();
@@ -33,119 +40,75 @@ public class EmployeeController {
 		searchResDto.setSupervisorList(indexService.getSupervisorList());
 		model.addAttribute("searchResDto", searchResDto);
 		String searchCondition = searchReqDto.getSearchCondition();
-		if (searchCondition.equals("all"))
-			findAllEmployee(model, searchReqDto);
-		else if (searchCondition.equals("department"))
-			findDepartmentEmployee(model, searchReqDto);
-		else if (searchCondition.equals("sex"))
-			findSexEmployee(model, searchReqDto);
-		else if (searchCondition.equals("salary"))
-			findSalaryEmployee(model, searchReqDto);
-		else if (searchCondition.equals("bdate"))
-			findBdateEmployee(model, searchReqDto);
-		else
-			findSupervisorEmployee(model, searchReqDto);
-		System.out.println("model : " + model);
-		for(Entry<String, Object> en : model.asMap().entrySet()) {
-			redirectAttributes.addFlashAttribute(en.getKey(), en.getValue());
+		List<EmployeeResDto> ret;
+		switch (searchCondition) {
+			case "all":
+				ret = employeeService.findAllEmployee(searchReqDto);
+				break;
+			case "department":
+				ret = employeeService.findDepartmentEmployee(searchReqDto);
+				break;
+			case "sex":
+				ret = employeeService.findSexEmployee(searchReqDto);
+				break;
+			case "salary":
+				ret = employeeService.findSalaryEmployee(searchReqDto);
+				break;
+			case "bdate":
+				ret = employeeService.findBdateEmployee(searchReqDto);
+				break;
+			default:
+				ret = employeeService.findSupervisorEmployee(searchReqDto);
+				break;
 		}
-		System.out.println("model : " + redirectAttributes);
+		model.addAttribute("EmployeeResDtoList", ret);
+
+		List<EmployeeResDto> employeeResDtoList =
+				(List<EmployeeResDto>) model.getAttribute("EmployeeResDtoList");
+		ModifyEmployeeReqDto modifyEmployeeReqDto = new ModifyEmployeeReqDto(employeeResDtoList);
+		model.addAttribute("ModifyEmployeeReqDto",modifyEmployeeReqDto);
+
+		commonService.convertRedirectModel(model, redirectAttributes);
+
 		return "redirect:/";
 	}
 
-	@PostMapping("/re")
-	public String putEmployee(Model model) {
-		return null;
-	}
+	@PostMapping("/update")
+	public String updateEmployee(Model model,
+			@ModelAttribute("ModifyEmployeeReqDto") ModifyEmployeeReqDto modifyEmployeeReqDto) {
 
-	private void findSupervisorEmployee(Model model, SearchReqDto searchReqDto) {
+		System.out.println("=========" + modifyEmployeeReqDto);
 
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> employeeList = null;
-		String supervisorCondition = searchReqDto.getSupervisorCondition();
-		if (wants == null) {
-			employeeList = employeeService.findBySupervisor(supervisorCondition);
-		} else {
-			employeeList = employeeService.findBySupervisor(supervisorCondition, wants);
+		List<String> modifyingSsn = employeeService.getModifyingSsn(modifyEmployeeReqDto.getEmployeeReqDtoList());
+		if (modifyingSsn.isEmpty())
+			return "redirect:/";
+
+		if (modifyEmployeeReqDto.getUpdateCondition().equals("sex")) {
+			employeeService.updateSex(modifyEmployeeReqDto.getSex(), modifyingSsn);
+		} else if (modifyEmployeeReqDto.getUpdateCondition().equals("salary")) {
+			if (employeeService.updateSalary(modifyEmployeeReqDto.getSalary(), modifyingSsn) == -1) {
+				// TODO salary가 double값이 아닐 때 exceptionhandling 필요
+			}
+		} else if (modifyEmployeeReqDto.getUpdateCondition().equals("address")) {
+			employeeService.updateAddress(modifyEmployeeReqDto.getAddress(), modifyingSsn);
 		}
 
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(employeeList, searchReqDto);
-		model.addAttribute(employeeResDtos);
+		return "redirect:/";
 	}
 
-	private void findBdateEmployee(Model model, SearchReqDto searchReqDto) {
+	@PostMapping("/delete")
+	public String deleteEmployee(Model model,
+			@ModelAttribute("ModifyEmployeeReqDto") ModifyEmployeeReqDto modifyEmployeeReqDto) {
 
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> employeeList = null;
-		String bdateCondition = searchReqDto.getBdateCondition();
-		if (wants == null) {
-			employeeList = employeeService.findByBdate(bdateCondition);
-		} else {
-			employeeList = employeeService.findByBdate(bdateCondition, wants);
-		}
+		List<String> modifyingSsn = employeeService.getModifyingSsn(modifyEmployeeReqDto.getEmployeeReqDtoList());
+		if (modifyingSsn.isEmpty())
+			return "redirect:/";
 
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(employeeList, searchReqDto);
-		model.addAttribute(employeeResDtos);
+		employeeService.deleteEmployees(modifyingSsn);
+
+		return "redirect:/";
 	}
 
-	private void findSalaryEmployee(Model model, SearchReqDto searchReqDto) {
-
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> employeeList = null;
-		String salaryCondition = searchReqDto.getSalaryCondition();
-		if (wants == null) {
-			employeeList = employeeService.findBySalary(Integer.parseInt(salaryCondition));
-		} else {
-			employeeList = employeeService.findBySalary(Integer.parseInt(salaryCondition), wants);
-		}
-
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(employeeList, searchReqDto);
-		model.addAttribute(employeeResDtos);
-	}
-
-	private void findSexEmployee(Model model, SearchReqDto searchReqDto) {
-
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> employeeList = null;
-		String sexCondition = searchReqDto.getSexCondition();
-		if (wants == null) {
-			employeeList = employeeService.findBySex(sexCondition);
-		} else {
-			employeeList = employeeService.findBySex(sexCondition, wants);
-		}
-
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(employeeList, searchReqDto);
-		model.addAttribute(employeeResDtos);
-	}
-
-	private void findDepartmentEmployee(Model model, SearchReqDto searchReqDto) {
-
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> employeeList = null;
-		String departmentCondition = searchReqDto.getDepartmentCondition();
-		if (wants == null) {
-			employeeList = employeeService.findByDepartment(departmentCondition);
-		} else {
-			employeeList = employeeService.findByDepartment(departmentCondition, wants);
-		}
-
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(employeeList, searchReqDto);
-		model.addAttribute(employeeResDtos);
-	}
-
-	private void findAllEmployee(Model model, SearchReqDto searchReqDto) {
-
-		List<String> wants = searchReqDto.wantsList();
-		List<Employee> allEmployee = null;
-		if (wants == null) {
-			allEmployee = employeeService.findByAll();
-		} else {
-			allEmployee = employeeService.findByAll(wants);
-		}
-
-		List<EmployeeResDto> employeeResDtos = employeeService.employeeResDtoList(allEmployee, searchReqDto);
-		model.addAttribute(employeeResDtos);
-	}
 
 
 }

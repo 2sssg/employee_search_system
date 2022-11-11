@@ -22,6 +22,7 @@ public class EmployeeResDto {
 	private String supervisor;
 	private String department;
 
+	private boolean check;
 	private boolean useName;
 	private boolean useSsn;
 	private boolean useBdate;
@@ -30,7 +31,6 @@ public class EmployeeResDto {
 	private boolean useSalary;
 	private boolean useSupervisor;
 	private boolean useDepartment;
-
 
 	public void setSupervisor(ResultSet rs) {
 		try {
