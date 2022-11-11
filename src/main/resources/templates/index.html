@@ -6,9 +6,14 @@
   <title>Index</title>
 </head>
 <body>
-<form action="index.html" th:action="@{/employee/find}" th:object="${searchReqDto}" method="post">
 
+<div>
+  <span><a th:href="@{/employee/create}">직원 추가하기</a></span>
+</div>
+
+<form action="index.html" th:action="@{/employee/find}" th:object="${searchReqDto}" method="post">
   <div>
+
     <span> 검색 범위 </span>
     <select th:field="*{searchCondition}" id="searchCondition">
       <option value="all" id="allOption">전체</option>

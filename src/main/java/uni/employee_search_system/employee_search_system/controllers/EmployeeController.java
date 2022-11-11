@@ -1,21 +1,23 @@
 package uni.employee_search_system.employee_search_system.controllers;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uni.employee_search_system.employee_search_system.models.dtos.EmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.EmployeeResDto;
 import uni.employee_search_system.employee_search_system.models.dtos.ModifyEmployeeReqDto;
+import uni.employee_search_system.employee_search_system.models.dtos.create.CreateEmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.search.SearchReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.search.SearchResDto;
-import uni.employee_search_system.employee_search_system.models.vo.Employee;
 import uni.employee_search_system.employee_search_system.services.CommonService;
 import uni.employee_search_system.employee_search_system.services.EmployeeService;
 import uni.employee_search_system.employee_search_system.services.IndexService;
@@ -84,13 +86,19 @@ public class EmployeeController {
 			return "redirect:/";
 
 		if (modifyEmployeeReqDto.getUpdateCondition().equals("sex")) {
-			employeeService.updateSex(modifyEmployeeReqDto.getSex(), modifyingSsn);
+			employeeService.updateSex(modifyEmployeeReqDto.getSex(), modifyingSsn,
+					new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+							.format(new Timestamp(System.currentTimeMillis())));
 		} else if (modifyEmployeeReqDto.getUpdateCondition().equals("salary")) {
-			if (employeeService.updateSalary(modifyEmployeeReqDto.getSalary(), modifyingSsn) == -1) {
+			if (employeeService.updateSalary(modifyEmployeeReqDto.getSalary(), modifyingSsn,
+					new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+							.format(new Timestamp(System.currentTimeMillis()))) == -1) {
 				// TODO salary가 double값이 아닐 때 exceptionhandling 필요
 			}
 		} else if (modifyEmployeeReqDto.getUpdateCondition().equals("address")) {
-			employeeService.updateAddress(modifyEmployeeReqDto.getAddress(), modifyingSsn);
+			employeeService.updateAddress(modifyEmployeeReqDto.getAddress(), modifyingSsn,
+					new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+							.format(new Timestamp(System.currentTimeMillis())));
 		}
 
 		return "redirect:/";
@@ -109,6 +117,24 @@ public class EmployeeController {
 		return "redirect:/";
 	}
 
+
+	@GetMapping("/create")
+	public String createEmployee(Model model) {
+
+		model.addAttribute("CreateEmployeeReqDto", new CreateEmployeeReqDto());
+		return "create_employee";
+	}
+
+	@PostMapping("/create")
+	public String createEmployee(Model model,
+			@ModelAttribute("CreateEmployeeReqDto") CreateEmployeeReqDto createEmployeeReqDto) {
+
+		if (!employeeService.validateEmployeeInformation(createEmployeeReqDto))
+			return "redirect:/";
+
+		employeeService.createEmployee(createEmployeeReqDto);
+		return "redirect:/";
+	}
 
 
 }

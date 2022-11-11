@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uni.employee_search_system.employee_search_system.dao.Jdbc;
 import uni.employee_search_system.employee_search_system.models.dtos.EmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.EmployeeResDto;
+import uni.employee_search_system.employee_search_system.models.dtos.create.CreateEmployeeReqDto;
 import uni.employee_search_system.employee_search_system.models.dtos.search.SearchReqDto;
 import uni.employee_search_system.employee_search_system.models.vo.Employee;
 
@@ -409,10 +410,10 @@ public class EmployeeService {
 		return updateTargetList;
 	}
 
-	public int updateSex(String sex, List<String> modifyingSsn) {
+	public int updateSex(String sex, List<String> modifyingSsn, String modifytime) {
 
 		String update = "UPDATE EMPLOYEE ";
-		String set = "SET sex = '" + sex + "' ";
+		String set = "SET sex = '" + sex + "' ," + "modify_time = '" + modifytime + "' ";
 		String where = getWhereQuery(modifyingSsn);
 
 		return jdbc.executeUpdate(update + set + where);
@@ -420,7 +421,7 @@ public class EmployeeService {
 
 
 
-	public int updateSalary(String salary, List<String> modifyingSsn) {
+	public int updateSalary(String salary, List<String> modifyingSsn, String modifytime) {
 
 		double doubleSalary;
 		try {
@@ -430,16 +431,16 @@ public class EmployeeService {
 			return -1;
 		}
 		String update = "UPDATE EMPLOYEE ";
-		String set = "SET Salary = '" + doubleSalary + "' ";
+		String set = "SET Salary = '" + doubleSalary + "' ," + "modify_time = '" + modifytime + "' ";
 		String where = getWhereQuery(modifyingSsn);
 
 		return jdbc.executeUpdate(update + set + where);
 	}
 
-	public int updateAddress(String address, List<String> modifyingSsn) {
+	public int updateAddress(String address, List<String> modifyingSsn, String modifytime) {
 
 		String update = "UPDATE EMPLOYEE ";
-		String set = "SET Address = '" + address + "' ";
+		String set = "SET Address = '" + address + "' ," + "modify_time = '" + modifytime + "' ";
 		String where = getWhereQuery(modifyingSsn);
 
 		return jdbc.executeUpdate(update + set + where);
@@ -493,5 +494,66 @@ public class EmployeeService {
 	private String getWhereQuery(List<String> modifyingSsn) {
 		return "WHERE Ssn IN "
 				+ modifyingSsn.toString().replace("[", "(").replace("]", ")");
+	}
+
+	public boolean validateEmployeeInformation(CreateEmployeeReqDto createEmployeeReqDto) {
+
+		return (validateSsn(createEmployeeReqDto.getSsn())
+				&& validateSuperSsn(createEmployeeReqDto.getSuperSsn())
+				&& validateDno(createEmployeeReqDto.getDno()))
+				&& (!createEmployeeReqDto.getFname().equals(""))
+				&& (!createEmployeeReqDto.getMinit().equals(""))
+				&& (!createEmployeeReqDto.getLname().equals(""));
+	}
+
+	private boolean validateDno(String dno) {
+
+		if (dno.length() == 0) return true;
+		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM DEPARTMENT WHERE Dnumber = " + dno);
+		try {
+			rs.next();
+			System.out.println("dept : " + rs.getInt(1));
+			return rs.getInt(1) == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean validateSuperSsn(String superSsn) {
+
+		if (superSsn.length() == 0) return true;
+		if (superSsn.length() != 9) return false;
+		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM EMPLOYEE WHERE Ssn LIKE '" + superSsn + "'");
+		try {
+			rs.next();
+			System.out.println("super ssn : " + rs.getInt(1));
+			return rs.getInt(1) == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean validateSsn(String ssn) {
+
+		if (ssn.length() != 9) return false;
+
+		ResultSet rs = jdbc.executeQuery("SELECT COUNT(*) FROM EMPLOYEE WHERE Ssn LIKE '" + ssn + "'");
+		try {
+			rs.next();
+			System.out.println(rs.getInt(1) == 0);
+			return rs.getInt(1) == 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void createEmployee(CreateEmployeeReqDto createEmployeeReqDto) {
+
+		Employee employee = createEmployeeReqDto.toEmployee();
+		String insertQuery = employee.toInsertQuery();
+		jdbc.executeUpdate(insertQuery);
 	}
 }

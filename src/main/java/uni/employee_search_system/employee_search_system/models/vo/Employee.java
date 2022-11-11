@@ -2,6 +2,8 @@ package uni.employee_search_system.employee_search_system.models.vo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,10 @@ public class Employee {
 	private String sex;
 	private double salary;
 	private String superSsn;
+	private String createTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+			.format(new Timestamp(System.currentTimeMillis()));
+	private String modifytime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+			.format(new Timestamp(System.currentTimeMillis()));
 	private int dno;
 
 
@@ -37,7 +43,18 @@ public class Employee {
 
 	}
 
+	public String toInsertQuery() {
 
+		//INSERT INTO table_name (column1, column2, column3, ...)
+		//VALUES (value1, value2, value3, ...);
+		String insert = "INSERT INTO EMPLOYEE ";
+		String values = String.format("VALUES ('%s', '%s', '%s', '%s', %s, %s, '%s', %s, %s, %s, '%s', '%s')",
+				fname, minit, lname, ssn, bdate == null ? "NULL" : bdate
+				, address == null ? "NULL" : "'" + address + "'", sex, salary
+				, superSsn == null ? "NULL" : "'" + superSsn + "'", dno, createTime, modifytime);
+
+		return insert + values;
+	}
 
 	public String toQuery(List<String> wants) {
 		StringBuilder selectBuilder = new StringBuilder("SELECT ");

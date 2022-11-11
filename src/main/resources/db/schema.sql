@@ -9,6 +9,8 @@ CREATE TABLE EMPLOYEE(
                          Salary DECIMAL(10,2),
                          Super_ssn CHAR(9),
                          Dno INT DEFAULT 1 NOT NULL,
+                         Create_time datetime,
+                         modify_time datetime,
                          PRIMARY KEY (Ssn)
 );
 
