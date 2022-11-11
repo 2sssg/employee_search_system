@@ -11,6 +11,15 @@
   <span><a th:href="@{/employee/create}">직원 추가하기</a></span>
 </div>
 
+<div>
+  <span><a th:href="@{/department}">부서별 직원 현황 보기</a></span>
+</div>
+
+<div>
+  <span><a th:href="@{/dependent}">직원별 가족 현황 보기</a></span>
+</div>
+
+
 <form action="index.html" th:action="@{/employee/find}" th:object="${searchReqDto}" method="post">
   <div>
 

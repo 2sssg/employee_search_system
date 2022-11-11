@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
+
+<div th:each="dept_emp_info, stat : ${DepartmentEmployeeInformationDto}">
+  <h1 th:text="${dept_emp_info.departmentName}"></h1>
+  <table>
+    <thead>
+    <tr >
+      <th><span> NAME </span></th>
+      <th> <span> SSN </span></th>
+      <th><span> BDATE </span></th>
+      <th><span> ADDRESS </span></th>
+      <th><span> SEX </span></th>
+      <th><span> SALARY </span></th>
+      <th><span> SUPERVISOR </span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="emp, stat: ${dept_emp_info.departmentEmployeeDtoList}">
+      <td><span th:text="${emp.name}"></span></td>
+      <td><span th:text="${emp.ssn}"></span></td>
+      <td ><span th:text="${emp.bdate}"></span></td>
+      <td><span th:text="${emp.address}"></span></td>
+      <td><span th:text="${emp.sex}" ></span></td>
+      <td><span th:text="${emp.salary}" ></span></td>
+      <td><span th:text="${emp.supervisor}"></span></td>
+    </tr>
+    </tbody>
+  </table>
+  <br><br><br>
+</div>
 
 </body>
 </html>
