@@ -49,7 +49,7 @@ public class Employee {
 		//VALUES (value1, value2, value3, ...);
 		String insert = "INSERT INTO EMPLOYEE ";
 		String values = String.format("VALUES ('%s', '%s', '%s', '%s', %s, %s, '%s', %s, %s, %s, '%s', '%s')",
-				fname, minit, lname, ssn, bdate == null ? "NULL" : bdate
+				fname, minit, lname, ssn, bdate == null ? "NULL" : "'" + bdate + "'"
 				, address == null ? "NULL" : "'" + address + "'", sex, salary
 				, superSsn == null ? "NULL" : "'" + superSsn + "'", dno, createTime, modifytime);
 

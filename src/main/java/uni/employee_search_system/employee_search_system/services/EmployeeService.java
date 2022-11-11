@@ -68,7 +68,7 @@ public class EmployeeService {
 
 		List<String> wants = searchReqDto.wantsList();
 		List<Employee> employeeList = null;
-		String salaryCondition = searchReqDto.getSalaryCondition();
+		String salaryCondition = searchReqDto.getSalaryCondition().equals("") ? "0" : searchReqDto.getSalaryCondition();
 		if (wants == null) {
 			employeeList = findBySalary(Integer.parseInt(salaryCondition));
 		} else {
@@ -173,7 +173,7 @@ public class EmployeeService {
 		ResultSet rs;
 		int dno;
 		try {
-			rs = jdbc.executeQuery("SELECT Dnumber FROM DEPARTMENT WHERE Dname LIKE " + departmentCondition);
+			rs = jdbc.executeQuery("SELECT Dnumber FROM DEPARTMENT WHERE Dname LIKE '" + departmentCondition + "'");
 			rs.next();
 			dno = rs.getInt("Dnumber");
 		} catch (SQLException e) {
@@ -387,7 +387,7 @@ public class EmployeeService {
 			);
 			if (searchReqDto.isSupervisor() && employee.getSuperSsn() != null) {
 				ResultSet resultSet = jdbc.executeQuery(
-						"SELECT Fname, Minit, Lname FROM EMPLOYEE WHERE ssn LIKE " + employee.getSuperSsn());
+						"SELECT Fname, Minit, Lname FROM EMPLOYEE WHERE ssn LIKE '" + employee.getSuperSsn() + "'");
 				ret.get(ret.size() - 1).setSupervisor(resultSet);
 			}
 			if (searchReqDto.isDepartment()) {

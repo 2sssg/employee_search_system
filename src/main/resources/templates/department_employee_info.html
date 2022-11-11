@@ -18,32 +18,39 @@
     <span><a th:href="@{/dependent}">직원별 가족 현황 보기</a></span>
   </div>
 
-<div th:each="dept_emp_info, stat : ${DepartmentEmployeeInformationDto}">
-  <h1 th:text="${dept_emp_info.departmentName}"></h1>
+  <br><br><br>
+<div th:each="dept_emp_info, stat : ${DepartmentEmployeeInformationDtos}">
+  <span style="font-weight: bold; font-size: 2em; " th:text="${dept_emp_info.departmentName}"></span>
   <table>
-    <thead>
-    <tr >
-      <th><span> NAME </span></th>
-      <th> <span> SSN </span></th>
-      <th><span> BDATE </span></th>
-      <th><span> ADDRESS </span></th>
-      <th><span> SEX </span></th>
-      <th><span> SALARY </span></th>
-      <th><span> SUPERVISOR </span></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="emp, stat: ${dept_emp_info.departmentEmployeeDtoList}">
-      <td><span th:text="${emp.name}"></span></td>
-      <td><span th:text="${emp.ssn}"></span></td>
-      <td ><span th:text="${emp.bdate}"></span></td>
-      <td><span th:text="${emp.address}"></span></td>
-      <td><span th:text="${emp.sex}" ></span></td>
-      <td><span th:text="${emp.salary}" ></span></td>
-      <td><span th:text="${emp.supervisor}"></span></td>
-    </tr>
-    </tbody>
-  </table>
+      <thead>
+      <tr >
+        <th><span> NAME </span></th>
+        <th> <span> SSN </span></th>
+        <th><span> BDATE </span></th>
+        <th><span> ADDRESS </span></th>
+        <th><span> SEX </span></th>
+        <th><span> SALARY </span></th>
+        <th><span> SUPERVISOR </span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="emp, stat: ${dept_emp_info.departmentEmployeeDtoList}">
+        <td><span th:text="${emp.name}"></span></td>
+        <td><span th:text="${emp.ssn}"></span></td>
+        <td ><span th:text="${emp.bdate}"></span></td>
+        <td><span th:text="${emp.address}"></span></td>
+        <td><span th:text="${emp.sex}" ></span></td>
+        <td><span th:text="${emp.salary}" ></span></td>
+        <td><span th:text="${emp.supervisor}"></span></td>
+      </tr>
+      </tbody>
+    </table>
+  <br>
+  <form th:action="@{/department/change_salary}" method="post">
+    <input type="number" th:value="${dept_emp_info.salary}" name="salary"/>
+    <input type="hidden" th:value="${dept_emp_info.departmentNumber}" name="departmentNumber"/>
+    <button type="submit"> 부서 월급 수정하기 </button>
+  </form>
   <br><br><br>
 </div>
 

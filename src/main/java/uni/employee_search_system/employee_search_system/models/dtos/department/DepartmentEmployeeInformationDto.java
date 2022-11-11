@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 public class DepartmentEmployeeInformationDto {
 
 	private String departmentName;
+	private String departmentNumber;
 	private List<DepartmentEmployeeDto> departmentEmployeeDtoList = new ArrayList<>();
+	private String salary;
 
-	public DepartmentEmployeeInformationDto(String departmentName) {
+
+	public DepartmentEmployeeInformationDto(String departmentName, String departmentNumber) {
 		this.departmentName = departmentName;
+		this.departmentNumber = departmentNumber;
 	}
 }

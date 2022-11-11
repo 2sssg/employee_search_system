@@ -142,27 +142,26 @@
     </tbody>
   </table>
 
-<!--  <input type="text" th:field="*{salaryCondition}" th:value="salaryCondition"/>-->
-<!--  <label th:for="salaryCondition" th:text="salary"> SALARY </label>-->
-<!--  <input type="submit" value="수정" th:field="*{salary}" th:formaction="@{/employee/update}"> 수정 </input>-->
+
+  <br><br><br>
   <div>
-    <select th:field="*{updateCondition}">
+    <select th:field="*{updateCondition}" id="update_condition">
       <option value="sex">성별</option>
       <option value="salary">연봉</option>
       <option value="address">주소</option>
     </select>
 
-    <select th:field="*{sex}">
+    <select th:field="*{sex}" id="update_sex_field">
       <option th:each="sex, stat : ${searchResDto.sexList}" th:text="${sex}" th:value="${sex}"></option>
     </select>
 
-    <input type="text" th:field="*{salary}" th:value="salary"/>
+    <input type="text" th:field="*{salary}" th:value="salary" id="update_salary_field"/>
 
-    <input type="text" th:field="*{address}" th:value="address"/>
+    <input type="text" th:field="*{address}" th:value="address" id="update_address_field"/>
 
-    <input type="submit" th:value="수정" th:formaction="@{/employee/update}"/>
-
-    <input type="submit" th:value="삭제" th:formaction="@{/employee/delete}"/>
+    <input type="submit" th:value="|선택한 데이터 수정|" th:formaction="@{/employee/update}"/>
+    <span style="display: inline-block; width: 520px;"> </span>
+    <input type="submit" th:value="|선택한 데이터 삭제|" th:formaction="@{/employee/delete}"/>
 
   </div>
 
@@ -173,6 +172,9 @@
 
   $(document).ready(function() {
     hideAll();
+    hideConditionField();
+    $("#update_sex_field").show();
+
     $('#searchCondition').change(function() {
       hideAll();
       switch($(this).children('option:selected').text()) {
@@ -195,12 +197,35 @@
           break;
       }
     });
+
+    $('#update_condition').change(function() {
+      hideConditionField();
+      switch($(this).children('option:selected').text()) {
+        case '성별':
+          $("#update_sex_field").show();
+          break;
+        case '연봉':
+          $("#update_salary_field").show();
+          break;
+        case '주소':
+          $("#update_address_field").show();
+          break;
+      }
+    });
+
     function hideAll() {
       $("#departmentFiled").hide();
       $("#sexField").hide();
       $("#salaryField").hide();
       $("#bdateField").hide();
       $("#supervisorField").hide();
+
+    }
+
+    function hideConditionField() {
+      $("#update_sex_field").hide();
+      $("#update_salary_field").hide();
+      $("#update_address_field").hide();
     }
 
 
