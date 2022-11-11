@@ -5,6 +5,19 @@
   <title>add user</title>
 </head>
 <body>
+  <div>
+    <span><a th:href="@{/}">직원 검색하기</a></span>
+  </div>
+
+  <div>
+    <span><a th:href="@{/department}">부서별 직원 현황 보기</a></span>
+  </div>
+
+  <div>
+    <span><a th:href="@{/dependent}">직원별 가족 현황 보기</a></span>
+  </div>
+
+
   <h1>직원 추가하기</h1>
   <form th:action="@{/employee/create}" th:object="${CreateEmployeeReqDto}" method="post">
     <div>

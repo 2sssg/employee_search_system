@@ -6,5 +6,68 @@
 </head>
 <body>
 
+  <div>
+    <span><a th:href="@{/}">직원 검색하기</a></span>
+  </div>
+
+  <div>
+    <span><a th:href="@{/employee/create}">직원 추가하기</a></span>
+  </div>
+
+  <div>
+    <span><a th:href="@{/department}">부서별 직원 현황 보기</a></span>
+  </div>
+
+
+
+<div th:each="emp, stat: ${DepartmentEmployeeInformationDto}">
+    <h3> EMPLOYEE </h3>
+    <table>
+      <thead>
+      <tr >
+        <th><span> NAME </span></th>
+        <th> <span> SSN </span></th>
+        <th><span> BDATE </span></th>
+        <th><span> ADDRESS </span></th>
+        <th><span> SEX </span></th>
+        <th><span> SALARY </span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><span th:text="${emp.name}"></span></td>
+        <td><span th:text="${emp.ssn}"></span></td>
+        <td ><span th:text="${emp.bdate}"></span></td>
+        <td><span th:text="${emp.address}"></span></td>
+        <td><span th:text="${emp.sex}" ></span></td>
+        <td><span th:text="${emp.salary}" ></span></td>
+      </tr>
+      </tbody>
+    </table>
+    <br>
+    <h3> DEPENDENT </h3>
+
+    <table>
+      <thead>
+      <tr >
+        <th><span> RELATIONSHIP </span></th>
+        <th><span> NAME </span></th>
+        <th><span> SEX </span></th>
+        <th><span> BDATE </span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="relation, stat : ${emp.dependentDtoList}">
+        <td><span th:text="${relation.relationship}"></span></td>
+        <td><span th:text="${relation.dependentName}"></span></td>
+        <td><span th:text="${relation.sex}"></span></td>
+        <td><span th:text="${relation.bdate}"></span></td>
+      </tr>
+      </tbody>
+    </table>
+    <br>
+    <hr style="width: 100%; size: A3; " >
+    <br>
+  </div>
 </body>
 </html>
